@@ -23,15 +23,26 @@ jobs:
       - name: Install build tools
         run: $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Reorganize files into project structure
+      - name: Reorganize project structure
         run: |
           mkdir -p app/src/main/java/com/primoceara/deletebutton
+          mkdir -p app/src/main/res/layout
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/xml
+          mkdir -p app/src/main/res/mipmap-mdpi
           for f in MainActivity.java OverlayService.java DeleteAccessibilityService.java; do
             [ -f "$f" ] && mv "$f" app/src/main/java/com/primoceara/deletebutton/
           done
+          [ -f "AndroidManifest.xml" ] && mv AndroidManifest.xml app/src/main/
+          [ -f "activity_main.xml" ] && mv activity_main.xml app/src/main/res/layout/
+          [ -f "strings.xml" ] && mv strings.xml app/src/main/res/values/
+          [ -f "themes.xml" ] && mv themes.xml app/src/main/res/values/
+          [ -f "accessibility_service_config.xml" ] && mv accessibility_service_config.xml app/src/main/res/xml/
+          echo "Estrutura:"
+          find app/ -type f
 
       - name: Build with Gradle
-        run: gradle assembleDebug
+        run: gradle :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
