@@ -31,6 +31,11 @@ jobs:
           mkdir -p app/src/main/res/mipmap-mdpi
           mkdir -p gradle/wrapper
 
+          cat > gradle.properties << 'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          EOF
+
           cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
