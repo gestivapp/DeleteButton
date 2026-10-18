@@ -132,3 +132,52 @@ jobs:
               android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
               <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="Botão Delete Teclado" android:textSize="22sp" android:textStyle="bold"
+                  android:layout_marginBottom="32dp"/>
+              <Button android:id="@+id/btnOverlayPermission" android:layout_width="match_parent"
+                  android:layout_height="wrap_content" android:text="1. Conceder permissão de overlay"
+                  android:layout_marginBottom="12dp"/>
+              <Button android:id="@+id/btnAccessibility" android:layout_width="match_parent"
+                  android:layout_height="wrap_content" android:text="2. Ativar acessibilidade"
+                  android:layout_marginBottom="12dp"/>
+              <Button android:id="@+id/btnToggleService" android:layout_width="match_parent"
+                  android:layout_height="wrap_content" android:text="3. Iniciar botão delete"/>
+              <TextView android:id="@+id/tvStatus" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" android:text="Status: inativo"
+                  android:layout_marginTop="24dp"/>
+          </LinearLayout>
+          EOF
+
+          cat > app/src/main/res/values/strings.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources><string name="app_name">Botão Delete</string></resources>
+          EOF
+
+          cat > app/src/main/res/values/themes.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="Theme.DeleteButton" parent="Theme.AppCompat.Light.NoActionBar"/>
+          </resources>
+          EOF
+
+          cat > app/src/main/res/xml/accessibility_service_config.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+              android:description="@string/app_name"
+              android:accessibilityEventTypes="typeWindowStateChanged|typeViewFocusChanged"
+              android:accessibilityFeedbackType="feedbackGeneric"
+              android:notificationTimeout="100"
+              android:canRetrieveWindowContent="true"/>
+          EOF
+
+          printf '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x000\x00\x00\x000\x08\x02\x00\x00\x00\xb9\x81\x9e\x1d\x00\x00\x00\x19IDAT\x08\x1dc\xfc\xff\xff?\x03\x90\x01\x00\x08\xfc\x02\xfe\xa7\x9d\x15\xb0\x00\x00\x00\x00IEND\xaeB`\x82' > app/src/main/res/mipmap-mdpi/ic_launcher.png
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeleteButton-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
