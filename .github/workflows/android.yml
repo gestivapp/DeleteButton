@@ -159,11 +159,10 @@ jobs:
 
           printf '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x000\x00\x00\x000\x08\x02\x00\x00\x00\xb9\x81\x9e\x1d\x00\x00\x00\x19IDAT\x08\x1dc\xfc\xff\xff?\x03\x90\x01\x00\x08\xfc\x02\xfe\xa7\x9d\x15\xb0\x00\x00\x00\x00IEND\xaeB`\x82' > app/src/main/res/mipmap-mdpi/ic_launcher.png
 
-          echo "=== Estrutura ==="
-          find app/ gradle/ -type f | sort
-
       - name: Build APK
-        run: ./gradlew :app:assembleDebug --no-daemon
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
